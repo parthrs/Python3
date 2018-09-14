@@ -58,23 +58,22 @@ class ExecuteRemotely():
 
 		except paramiko.ssh_exception.AuthenticationException as e:
 			self.logger.error("Failed to authenticate user {}@{}".format(self.username,self.host))
-			return ret_str
 		except paramiko.ssh_exception.BadHostKeyException as e:
 			self.logger.error("Failed to authenticate the keys on {} (Check the ~/.SSH/authorized_users file on the server.)".format(self.host))
-			return ret_str
 		except paramiko.ssh_exception.SSHException as e:
 			self.logger.error("Exception in SSH negotiation to {}: {}".format(self.host, e))
-			return ret_str
 		except socket.error as e:
 			self.logger.error("Socket exception while connecting to {}: {}".format(self.host, e))
-			return ret_str
 		except:
 			self.logger.error('Failed to connect to {}: {}'.format(self.host, sys.exc_info()[:2]))
+		finally:
+			transport = self.client.get_transport()
+			if transport:
+				self.client.close()
 			return ret_str
-		else:
-			return ret_str
-      
+			
 if __name__ == "__main__":
   s = ExecuteRemotely()
   # ~(Tilda) is used here to be a placeholder for double inverted commas (")
+  # Run a bash command on the remote server
   print(s.run_command(". /opt/environ.ksh; echo -e ~set heading off; \n set pagesize 0; \n set trimspool on; \n select NAME || ',' || ID || ',' || TO_CHAR(TIME_STAMP, 'yyyy-mm-dd hh24:mi:ss') from LOGIN_TIME where TIME_STAMP >= sysdate - interval '10' minute order by TIME_STAMP asc;~ | sqlplus -s pshah/pshah@dataguard"))
