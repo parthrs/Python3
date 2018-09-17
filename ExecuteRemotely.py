@@ -1,3 +1,8 @@
+#!/usr/local/bin/python3.6
+
+# Import custom modules
+from CreateLogger import create_logger
+
 class ExecuteRemotely():
 	"""
 	A wrapper class on the paramiko ssh library
@@ -20,8 +25,9 @@ class ExecuteRemotely():
 			self.host = kwargs['host']
 			self.username = kwargs['username']
 
+		# Logger named after the calling module
 		self.file_name =  sys.argv[0]
-		self.logger = logging.getLogger(self.file_name)
+		self.logger = create_logger(self.file_name)
 
 		# From paramiko documentation
 		# "A high-level representation of a session with an SSH server.
