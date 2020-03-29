@@ -6,3 +6,7 @@
 1. server.py         - A simple http server that takes in requests (from threadRequests.py) and responds with a random delay 0.2 <= delay <= 0.8 seconds.
 2. serialRequests.py - A client making requests to the http server on local host serially.
 3. threadRequests.py - A simple client making requests to the server using multiple threads.
+
+### E.g.
+### Run the server.py in the background
+#### python3.7 server.py &
