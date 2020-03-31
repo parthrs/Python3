@@ -18,7 +18,7 @@ def make_http_requests(server_address, input_q, output_q):
   while True:
     request_n = input_q.get()
     resp = requests.get("http://{0}:{1}".format(server_address[0], server_address[1]))
-    output_q.put({request_n: "Status: {0}, Response: Server took {1}".format(resp.status_code, resp.text)})
+    output_q.put((request_n, str(resp.text)))
     input_q.task_done()
 
 if __name__ == "__main__":
@@ -50,6 +50,9 @@ if __name__ == "__main__":
 
   # Wait for all worker threads to finish
   input_queue.join()
-
+  print("Summary:")
   print("Took {0} seconds to make {1} requests".format(str(time.time() - start_time), num_requests+1))
-  print(list(output_queue.queue))
+  print("")
+  print("Per request stats:")
+  for _i in output_queue.queue:
+    print("Request # {0} took {1} seconds for the server to process".format(*_i))
